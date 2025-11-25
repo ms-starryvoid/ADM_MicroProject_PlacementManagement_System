@@ -8,7 +8,6 @@ package PlacementManagement.Ui;
  *
  * @author HP
  */
-
 import PlacementManagement.Validations.Validation;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
@@ -57,7 +56,7 @@ public class RegisterFrame extends JFrame {
         cgpaField = new JTextField();
         deptField = new JTextField();
 
-        genderBox = new JComboBox<>(new String[] {"Male", "Female", "Other"});
+        genderBox = new JComboBox<>(new String[]{"Male", "Female", "Other"});
         genderBox.setFont(new Font("Arial", Font.PLAIN, 14));
 
         dobChooser = new JDateChooser();
@@ -67,7 +66,7 @@ public class RegisterFrame extends JFrame {
         resumePathField = new JTextField();
         resumePathField.setEditable(false);
         resumePathField.setFont(new Font("Arial", Font.PLAIN, 13));
-        
+
         JButton uploadResumeBtn = new JButton("Upload Resume");
         uploadResumeBtn.setFont(new Font("Arial", Font.PLAIN, 13));
         uploadResumeBtn.setBackground(new Color(240, 240, 240));
@@ -147,7 +146,7 @@ public class RegisterFrame extends JFrame {
         // buttons
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         bottom.setBorder(BorderFactory.createEmptyBorder(5, 0, 10, 0));
-        
+
         JButton registerBtn = new JButton("Create Account");
         registerBtn.setFont(new Font("Arial", Font.BOLD, 15));
         registerBtn.setPreferredSize(new Dimension(150, 38));
@@ -155,7 +154,7 @@ public class RegisterFrame extends JFrame {
         registerBtn.setForeground(Color.WHITE);
         registerBtn.setFocusPainted(false);
         registerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         JButton backBtn = new JButton("Back to Login");
         backBtn.setFont(new Font("Arial", Font.PLAIN, 14));
         backBtn.setPreferredSize(new Dimension(140, 38));
@@ -198,113 +197,113 @@ public class RegisterFrame extends JFrame {
     }
 
     private void register() {
-    try {
-        String roll = rollField.getText().trim();
-        String name = nameField.getText().trim();
-        String email = emailField.getText().trim();
-        String pass = new String(passwordField.getPassword()).trim();
-        String phone = phoneField.getText().trim();
-        String dept = deptField.getText().trim();
-        String cgpaText = cgpaField.getText().trim();
+        try {
+            String roll = rollField.getText().trim();
+            String name = nameField.getText().trim();
+            String email = emailField.getText().trim();
+            String pass = new String(passwordField.getPassword()).trim();
+            String phone = phoneField.getText().trim();
+            String dept = deptField.getText().trim();
+            String cgpaText = cgpaField.getText().trim();
 
-        // ===============================
-        // REQUIRED FIELDS CHECK
-        // ===============================
-        if (roll.isEmpty() || name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Fill all required fields.");
-            return;
-        }
-
-        // ===============================
-        // VALIDATION: EMAIL
-        // ===============================
-        if (!Validation.isValidEmail(email)) {
-            JOptionPane.showMessageDialog(this, Validation.onInvalidEmail());
-            return;
-        }
-
-        // ===============================
-        // VALIDATION: PHONE
-        // ===============================
-        if (!Validation.isValidPhone(phone)) {
-            JOptionPane.showMessageDialog(this, 
-                    "Invalid phone number!\nPhone must be 10 digits and not start with 0.");
-            return;
-        }
-
-        // ===============================
-        // VALIDATION: CGPA
-        // ===============================
-        if (!Validation.isValidCgpa(cgpaText)) {
-            JOptionPane.showMessageDialog(this, 
-                    "Invalid CGPA! Must be a number between 0.0 and 10.0");
-            return;
-        }
-        double cgpa = Double.parseDouble(cgpaText);
-
-        // ===============================
-        // VALIDATION: DEPARTMENT
-        // ===============================
-        if (!Validation.isValidDepartment(dept)) {
-            JOptionPane.showMessageDialog(this, 
-                    "Invalid Department!\nAllowed: CSE, IT, ECE, EEE, MECH, CIVIL, AI, AIML");
-            return;
-        }
-
-        // ===============================
-        // VALIDATION: DOB (NOT IN FUTURE)
-        // ===============================
-        LocalDate dob = null;
-        if (dobChooser.getDate() != null) {
-            dob = new java.sql.Date(dobChooser.getDate().getTime()).toLocalDate();
-            if (dob.isAfter(LocalDate.now())) {
-                JOptionPane.showMessageDialog(this, "Date of Birth cannot be in the future!");
+            // ===============================
+            // REQUIRED FIELDS CHECK
+            // ===============================
+            if (roll.isEmpty() || name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Fill all required fields.");
                 return;
             }
+
+            // ===============================
+            // VALIDATION: EMAIL
+            // ===============================
+            if (!Validation.isValidEmail(email)) {
+                JOptionPane.showMessageDialog(this, Validation.onInvalidEmail());
+                return;
+            }
+
+            // ===============================
+            // VALIDATION: PHONE
+            // ===============================
+            if (!Validation.isValidPhone(phone)) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid phone number!\nPhone must be 10 digits and not start with 0.");
+                return;
+            }
+
+            // ===============================
+            // VALIDATION: CGPA
+            // ===============================
+            if (!Validation.isValidCgpa(cgpaText)) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid CGPA! Must be a number between 0.0 and 10.0");
+                return;
+            }
+            double cgpa = Double.parseDouble(cgpaText);
+
+            // ===============================
+            // VALIDATION: DEPARTMENT
+            // ===============================
+            if (!Validation.isValidDepartment(dept)) {
+                JOptionPane.showMessageDialog(this,
+                        "Invalid Department!\nAllowed: CSE, IT, ECE, EEE, MECH, CIVIL, AI, AIML");
+                return;
+            }
+
+            // ===============================
+            // VALIDATION: DOB (NOT IN FUTURE)
+            // ===============================
+            LocalDate dob = null;
+            if (dobChooser.getDate() != null) {
+                dob = new java.sql.Date(dobChooser.getDate().getTime()).toLocalDate();
+                if (dob.isAfter(LocalDate.now())) {
+                    JOptionPane.showMessageDialog(this, "Date of Birth cannot be in the future!");
+                    return;
+                }
+            }
+
+            // ===============================
+            // CHECK DUPLICATES
+            // ===============================
+            if (studentDAO.rollExists(roll)) {
+                JOptionPane.showMessageDialog(this, "Roll Number already registered.");
+                return;
+            }
+
+            if (studentDAO.emailExists(email)) {
+                JOptionPane.showMessageDialog(this, "Email already registered.");
+                return;
+            }
+
+            // ===============================
+            // CREATE OBJECT AND INSERT
+            // ===============================
+            Student s = new Student();
+            s.setRollNo(roll);
+            s.setName(name);
+            s.setEmail(email);
+            s.setPassword(pass);
+            s.setPhone(phone);
+            s.setDepartment(dept);
+            s.setCgpa(cgpa);
+            s.setGender((String) genderBox.getSelectedItem());
+            s.setDob(dob);
+            s.setResumeUrl(resumeBase64);
+            s.setStatus("active");
+
+            boolean saved = studentDAO.insertStudent(s);
+
+            if (saved) {
+                JOptionPane.showMessageDialog(this, "Registration Successful!");
+                new Login().setVisible(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Registration Failed.");
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
-
-        // ===============================
-        // CHECK DUPLICATES
-        // ===============================
-        if (studentDAO.rollExists(roll)) {
-            JOptionPane.showMessageDialog(this, "Roll Number already registered.");
-            return;
-        }
-
-        if (studentDAO.emailExists(email)) {
-            JOptionPane.showMessageDialog(this, "Email already registered.");
-            return;
-        }
-
-        // ===============================
-        // CREATE OBJECT AND INSERT
-        // ===============================
-        Student s = new Student();
-        s.setRollNo(roll);
-        s.setName(name);
-        s.setEmail(email);
-        s.setPassword(pass);
-        s.setPhone(phone);
-        s.setDepartment(dept);
-        s.setCgpa(cgpa);
-        s.setGender((String) genderBox.getSelectedItem());
-        s.setDob(dob);
-        s.setResumeUrl(resumeBase64);
-        s.setStatus("active");
-
-        boolean saved = studentDAO.insertStudent(s);
-
-        if (saved) {
-            JOptionPane.showMessageDialog(this, "Registration Successful!");
-            new Login().setVisible(true);
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Registration Failed.");
-        }
-
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
     }
-}
 
 }
